@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Companion — Smart Campus Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Mobile App Shell (390 x 844px) -->
+  <div class="app-frame" id="appFrame">
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">
+      <span class="status-time">9:41</span>
+      <div class="status-right">
+        <span class="status-network">LTE</span>
+        <span class="battery-icon"></span>
+      </div>
+    </div>
+
+    <!-- Offline Simulation Banner -->
+    <div class="offline-banner hidden" id="offlineBanner">
+      <span>You are offline. Showing saved campus data.</span>
+      <button type="button" class="link-btn-sm" onclick="toggleOfflineMode()">Reconnect</button>
+    </div>
+
+    <!-- =========================================================
+         00A / 00B / 00C — ONBOARDING SCREENS
+    ========================================================== -->
+    <section class="screen onboarding-screen active" id="screen-onboarding">
+      <div class="onboarding-overlay">
+        <div class="onboarding-top">
+          <div class="brand-badge">SC</div>
+          <p class="brand-name-white">Student Companion</p>
+        </div>
+
+        <div class="onboarding-bottom">
+          <div id="onboardingTextGroup" class="onboarding-copy">
+            <span class="eyebrow-light">YOUR CAMPUS, CONNECTED</span>
+            <h1>Everything you need, right on campus.</h1>
+            <p>Report issues, discover events, find support, and stay informed wherever you are.</p>
+          </div>
+
+          <div id="onboardingActions" class="onboarding-actions">
+            <button type="button" class="btn btn-white" onclick="goToScreen('screen-login')">Get Started</button>
+            <button type="button" class="btn-text-white" onclick="goToScreen('screen-login')">I already have an account</button>
+          </div>
+
+          <div class="onboarding-dots">
+            <span class="dot" id="dot-0" onclick="setOnboardingStep(0)"></span>
+            <span class="dot" id="dot-1" onclick="setOnboardingStep(1)"></span>
+            <span class="dot active" id="dot-2" onclick="setOnboardingStep(2)"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         01 — LOGIN SCREEN
+    ========================================================== -->
+    <section class="screen" id="screen-login">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goToScreen('screen-onboarding')" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Sign In</h2>
+          <p class="header-subtitle">Student Companion</p>
+        </div>
+      </div>
+
+      <div class="screen-body">
+        <div class="login-brand-center">
+          <div class="brand-badge-blue">SC</div>
+          <p class="brand-name-dark">Student Companion</p>
+        </div>
+
+        <h1 class="page-title">Welcome back</h1>
+        <p class="page-desc">Access campus services, events and support in one place.</p>
+
+        <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" class="input-field" value="student@campus.edu" placeholder="student@campus.edu" required>
+            <span class="field-error" id="loginEmailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="loginPassword" class="input-field" value="campus1234" placeholder="Enter password" required>
+              <button type="button" class="show-pass-btn" id="togglePassBtn" onclick="togglePasswordVisibility()">Show</button>
+            </div>
+            <span class="field-error" id="loginPassError"></span>
+          </div>
+
+          <div class="login-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" checked>
+              <span>Remember Me</span>
+            </label>
+            <button type="button" class="link-btn" onclick="openInfoModal('Forgot Password', 'A password reset link can be sent to your campus email address. Contact IT Helpdesk if you are locked out.')">Forgot Password</button>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="signInBtn">Sign In</button>
+          <p class="helper-center">Demo account is already filled in</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         02 — HOME SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-home">
+      <div class="top-header space-between">
+        <div class="header-left">
+          <button type="button" class="icon-back" onclick="goToScreen('screen-login')" aria-label="Back">&#8592;</button>
+          <div>
+            <h2 class="header-title">Hello Student</h2>
+            <p class="header-subtitle">Tuesday, 24 September</p>
+          </div>
+        </div>
+        <button type="button" class="bell-btn" onclick="goToScreen('screen-notifications')" aria-label="Notifications">
+          &#128276;<span class="notif-dot" id="homeNotifDot"></span>
+        </button>
+      </div>
+
+      <div class="screen-body">
+        <div class="hero-card">
+          <span class="eyebrow-blue">CAMPUS MADE SIMPLE</span>
+          <h2>How can we help today?</h2>
+          <p>Report an issue and track updates from anywhere.</p>
+          <button type="button" class="btn btn-primary" onclick="goToScreen('screen-report')">New Report</button>
+        </div>
+
+        <h3 class="section-heading">Quick Services</h3>
+        <div class="quick-grid">
+          <button type="button" class="quick-item" onclick="goToScreen('screen-report')">
+            <span class="quick-icon">&#128295;</span>
+            <span>Report Issue</span>
+          </button>
+          <button type="button" class="quick-item" onclick="goToScreen('screen-lost-found')">
+            <span class="quick-icon">&#128188;</span>
+            <span>Lost &amp; Found</span>
+          </button>
+          <button type="button" class="quick-item" onclick="goToScreen('screen-events')">
+            <span class="quick-icon">&#128197;</span>
+            <span>Campus Events</span>
+          </button>
+          <button type="button" class="quick-item" onclick="goToScreen('screen-help')">
+            <span class="quick-icon">&#10067;</span>
+            <span>Help Center</span>
+          </button>
+        </div>
+
+        <h3 class="section-heading">Active Request</h3>
+        <div class="card" id="homeActiveRequestCard"></div>
+
+        <h3 class="section-heading">Upcoming Event</h3>
+        <div class="card event-mini-card" onclick="openEventDetails('EVT-01')">
+          <div class="date-pill-sm">
+            <strong>25</strong>
+            <span>OCT</span>
+          </div>
+          <div class="card-flex-body">
+            <h4>Student Tech Seminar</h4>
+            <p class="muted-sm">Main Auditorium · 10:00 AM</p>
+          </div>
+          <span class="chevron">&#8250;</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         03 — REPORT ISSUE SCREEN
+    ========================================================== -->
+    <section class="screen" id="screen-report">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goBack()" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Report an Issue</h2>
+          <p class="header-subtitle">Takes about 2 minutes</p>
+        </div>
+      </div>
+
+      <div class="screen-body">
+        <div class="error-summary hidden" id="reportErrorSummary">
+          <strong>Please check your information</strong>
+          <p>Complete the highlighted fields to continue.</p>
+        </div>
+
+        <form id="reportForm" onsubmit="handleReportSubmit(event)" novalidate>
+          <div class="form-group">
+            <label for="issueCategory">Issue Category</label>
+            <select id="issueCategory" class="input-field">
+              <option value="Facilities" selected>Facilities</option>
+              <option value="Safety">Safety</option>
+              <option value="IT & Technology">IT &amp; Technology</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="issueTitle">Issue Title</label>
+            <input type="text" id="issueTitle" class="input-field" value="Projector not working" placeholder="e.g., Projector not working">
+            <span class="field-error" id="issueTitleError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="issueLocation">Location</label>
+            <input type="text" id="issueLocation" class="input-field" value="Science Block — Room 105" placeholder="Building and room number">
+            <span class="field-error" id="issueLocationError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="issueDescription">Description</label>
+            <textarea id="issueDescription" class="input-field textarea-field" rows="3" placeholder="Describe the issue clearly...">The projector turns on, but no image is displayed.</textarea>
+            <span class="field-error" id="issueDescError"></span>
+          </div>
+
+          <div class="form-group">
+            <div class="upload-box" id="photoUploadBox" onclick="openPhotoOverlay()">
+              <span class="upload-icon">&#8679;</span>
+              <strong class="upload-title" id="photoUploadTitle">Add a Photo</strong>
+              <span class="muted-sm" id="photoUploadSub">PNG or JPG, up to 10 MB</span>
+            </div>
+          </div>
+
+          <div class="info-banner-blue">
+            <strong>Typical response time</strong>
+            <p>Facilities usually replies within 1–2 working days.</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit Report</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         04 — REQUEST TRACKING SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-requests">
+      <div class="top-header space-between">
+        <div class="header-left">
+          <button type="button" class="icon-back" onclick="goToScreen('screen-home')" aria-label="Back">&#8592;</button>
+          <div>
+            <h2 class="header-title">My Requests</h2>
+            <p class="header-subtitle" id="requestCountSubtitle">3 service requests</p>
+          </div>
+        </div>
+        <button type="button" class="bell-btn" onclick="goToScreen('screen-notifications')" aria-label="Notifications">&#128276;</button>
+      </div>
+
+      <div class="screen-body">
+        <div class="search-box">
+          <span class="search-icon">&#128269;</span>
+          <input type="text" id="requestSearchInput" placeholder="Search by request ID or title" oninput="renderRequests()">
+        </div>
+
+        <div class="chip-row" id="requestFilterChips">
+          <button type="button" class="chip active" data-filter="All" onclick="setRequestFilter('All', this)">All</button>
+          <button type="button" class="chip" data-filter="Pending" onclick="setRequestFilter('Pending', this)">Pending</button>
+          <button type="button" class="chip" data-filter="In Progress" onclick="setRequestFilter('In Progress', this)">In Progress</button>
+          <button type="button" class="chip" data-filter="Resolved" onclick="setRequestFilter('Resolved', this)">Resolved</button>
+        </div>
+
+        <div id="requestsListContainer"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05 — CAMPUS SERVICES SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-services">
+      <div class="top-header space-between">
+        <div class="header-left">
+          <button type="button" class="icon-back" onclick="goToScreen('screen-home')" aria-label="Back">&#8592;</button>
+          <div>
+            <h2 class="header-title">Campus Services</h2>
+            <p class="header-subtitle">Everything in one place</p>
+          </div>
+        </div>
+        <button type="button" class="bell-btn" onclick="goToScreen('screen-notifications')" aria-label="Notifications">&#128276;</button>
+      </div>
+
+      <div class="screen-body">
+        <div class="search-box">
+          <span class="search-icon">&#128269;</span>
+          <input type="text" id="serviceSearchInput" placeholder="Search campus services" oninput="filterServicesList()">
+        </div>
+
+        <h3 class="section-heading">Browse Services</h3>
+        <div id="servicesDirectoryList">
+          <div class="service-row-card" onclick="goToScreen('screen-report')">
+            <span class="service-icon-box">&#128295;</span>
+            <div class="card-flex-body">
+              <h4>Report a Campus Issue</h4>
+              <p class="muted-sm">Maintenance, safety and facilities</p>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
+
+          <div class="service-row-card" onclick="goToScreen('screen-lost-found')">
+            <span class="service-icon-box">&#128188;</span>
+            <div class="card-flex-body">
+              <h4>Lost &amp; Found</h4>
+              <p class="muted-sm">Search or report a lost item</p>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
+
+          <div class="service-row-card" onclick="goToScreen('screen-events')">
+            <span class="service-icon-box">&#128197;</span>
+            <div class="card-flex-body">
+              <h4>Campus Events</h4>
+              <p class="muted-sm">Discover what is happening</p>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
+
+          <div class="service-row-card" onclick="openInfoModal('Library', 'For current library hours, available study spaces and resources, contact campus support.')">
+            <span class="service-icon-box">&#128214;</span>
+            <div class="card-flex-body">
+              <h4>Library</h4>
+              <p class="muted-sm">Hours, spaces and resources</p>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
+
+          <div class="service-row-card" onclick="openInfoModal('Transport', 'For campus shuttle routes and current travel information, contact campus support.')">
+            <span class="service-icon-box">&#128652;</span>
+            <div class="card-flex-body">
+              <h4>Transport</h4>
+              <p class="muted-sm">Campus shuttle information</p>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
+
+          <div class="service-row-card" onclick="openInfoModal('Dining', 'For dining menus and current opening times, contact campus support.')">
+            <span class="service-icon-box">&#127860;</span>
+            <div class="card-flex-body">
+              <h4>Dining</h4>
+              <p class="muted-sm">Menus and opening times</p>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         06 — PROFILE & SETTINGS SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-profile">
+      <div class="top-header space-between">
+        <div class="header-left">
+          <button type="button" class="icon-back" onclick="goToScreen('screen-home')" aria-label="Back">&#8592;</button>
+          <div>
+            <h2 class="header-title">Profile &amp; Settings</h2>
+            <p class="header-subtitle">Your account</p>
+          </div>
+        </div>
+        <button type="button" class="bell-btn" onclick="goToScreen('screen-notifications')" aria-label="Notifications">&#128276;</button>
+      </div>
+
+      <div class="screen-body">
+        <div class="card profile-card">
+          <div class="avatar-circle">AM</div>
+          <div>
+            <h4>Ayesha Malik</h4>
+            <p class="muted-sm">BSc Computer Science · Year 1</p>
+            <span class="verified-text">&#10003; Verified Student</span>
+          </div>
+        </div>
+
+        <h3 class="section-heading">Account Settings</h3>
+        <div class="settings-list">
+          <button type="button" class="settings-row" onclick="openInfoModal('Personal Information', 'Ayesha Malik\nstudent@campus.edu\nBSc Computer Science · Year 1\n\nContact support if your information needs to be updated.')">
+            <span>&#128100; Personal Information</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+          <button type="button" class="settings-row" onclick="goToScreen('screen-notifications')">
+            <span>&#128276; Notifications</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+          <button type="button" class="settings-row" onclick="openInfoModal('Privacy & Security', 'Your university account keeps campus services connected. Contact support for account and privacy questions.')">
+            <span>&#128737; Privacy &amp; Security</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+          <button type="button" class="settings-row" onclick="openInfoModal('Appearance', 'Student Companion uses a clear, accessible light appearance.')">
+            <span>&#9728; Appearance</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+          <button type="button" class="settings-row" onclick="toggleOfflineMode()">
+            <span>&#128246; Toggle Offline State (Demo)</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+        </div>
+
+        <h3 class="section-heading">Support</h3>
+        <div class="settings-list">
+          <button type="button" class="settings-row" onclick="goToScreen('screen-help')">
+            <span>&#10067; Help Center</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+          <button type="button" class="settings-row" onclick="goToScreen('screen-feedback')">
+            <span>&#128172; Send Feedback</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+          <button type="button" class="settings-row logout-row" onclick="openLogoutModal()">
+            <span>&#8594; Log Out</span>
+            <span class="chevron">&#8250;</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         07 (07a / 07b / 07c) — ISSUE DETAILS SCREEN
+    ========================================================== -->
+    <section class="screen" id="screen-issue-details">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goBack()" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Issue Details</h2>
+          <p class="header-subtitle" id="detailRequestIdSub">Request SC-002</p>
+        </div>
+      </div>
+
+      <div class="screen-body" id="issueDetailsContainer"></div>
+    </section>
+
+    <!-- =========================================================
+         08 — CREATE LOST & FOUND POST SCREEN
+    ========================================================== -->
+    <section class="screen" id="screen-create-lf">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goToScreen('screen-lost-found')" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Create Lost &amp; Found Post</h2>
+          <p class="header-subtitle">Help return an item to its owner</p>
+        </div>
+      </div>
+
+      <div class="screen-body">
+        <form id="createLfForm" onsubmit="handleCreateLfPost(event)" novalidate>
+          <div class="form-group">
+            <label>Post Type</label>
+            <div class="segmented-row">
+              <button type="button" class="seg-btn active" id="typeLostBtn" onclick="setLfPostType('Lost')">Lost Item</button>
+              <button type="button" class="seg-btn" id="typeFoundBtn" onclick="setLfPostType('Found')">Found Item</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lfItemName">Item Name</label>
+            <input type="text" id="lfItemName" class="input-field" value="Black wallet" placeholder="e.g., Black wallet">
+            <span class="field-error" id="lfNameError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="lfCategory">Category</label>
+            <select id="lfCategory" class="input-field">
+              <option value="Personal" selected>Personal belongings</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Documents">Documents</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="lfLocation">Location</label>
+            <input type="text" id="lfLocation" class="input-field" value="Main Library" placeholder="e.g., Main Library">
+            <span class="field-error" id="lfLocationError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="lfDate">Date</label>
+            <select id="lfDate" class="input-field">
+              <option value="Reported today" selected>24 September 2026</option>
+              <option value="Reported yesterday">23 September 2026</option>
+              <option value="Reported 2 days ago">22 September 2026</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="lfDescription">Description</label>
+            <textarea id="lfDescription" class="input-field textarea-field" rows="3" placeholder="Add identifying details...">Black leather wallet with student ID inside.</textarea>
+            <span class="field-error" id="lfDescError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="lfContact">Contact Method</label>
+            <select id="lfContact" class="input-field">
+              <option value="Campus email" selected>Campus email</option>
+              <option value="Campus support">Campus support</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Publish Post</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         09 — LOST & FOUND SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-lost-found">
+      <div class="top-header space-between">
+        <div class="header-left">
+          <button type="button" class="icon-back" onclick="goToScreen('screen-home')" aria-label="Back">&#8592;</button>
+          <div>
+            <h2 class="header-title">Lost &amp; Found</h2>
+            <p class="header-subtitle">Search or report campus items</p>
+          </div>
+        </div>
+        <button type="button" class="bell-btn" onclick="goToScreen('screen-notifications')" aria-label="Notifications">&#128276;</button>
+      </div>
+
+      <div class="screen-body">
+        <div class="search-box">
+          <span class="search-icon">&#128269;</span>
+          <input type="text" id="lfSearchInput" placeholder="Search lost and found items" oninput="renderLostFound()">
+        </div>
+
+        <div class="chip-row scroll-x" id="lfFilterChips">
+          <button type="button" class="chip active" onclick="setLfFilter('All', this)">All</button>
+          <button type="button" class="chip" onclick="setLfFilter('Lost', this)">Lost</button>
+          <button type="button" class="chip" onclick="setLfFilter('Found', this)">Found</button>
+          <button type="button" class="chip" onclick="setLfFilter('Electronics', this)">Electronics</button>
+          <button type="button" class="chip" onclick="setLfFilter('Personal', this)">Personal</button>
+        </div>
+
+        <h3 class="section-heading">Recently Reported</h3>
+        <div id="lfListContainer"></div>
+
+        <button type="button" class="btn btn-primary mt-12" onclick="goToScreen('screen-create-lf')">Report Lost or Found Item</button>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         10 / 15 — CAMPUS EVENTS SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-events">
+      <div class="top-header space-between">
+        <div class="header-left">
+          <button type="button" class="icon-back" onclick="goToScreen('screen-home')" aria-label="Back">&#8592;</button>
+          <div>
+            <h2 class="header-title">Campus Events</h2>
+            <p class="header-subtitle">Discover what's happening on campus</p>
+          </div>
+        </div>
+        <button type="button" class="bell-btn" onclick="goToScreen('screen-notifications')" aria-label="Notifications">&#128276;</button>
+      </div>
+
+      <div class="screen-body">
+        <div class="search-box">
+          <span class="search-icon">&#128269;</span>
+          <input type="text" id="eventSearchInput" placeholder="Search campus events" oninput="renderEvents()">
+        </div>
+
+        <div class="info-banner-blue">
+          <strong>Discover</strong>
+          <p>Find seminars, workshops, sports, and student activities.</p>
+        </div>
+
+        <div class="chip-row scroll-x" id="eventCategoryChips">
+          <button type="button" class="chip active" onclick="setEventFilter('All', this)">All Events</button>
+          <button type="button" class="chip" onclick="setEventFilter('Seminar', this)">Seminars</button>
+          <button type="button" class="chip" onclick="setEventFilter('Workshop', this)">Workshops</button>
+          <button type="button" class="chip" onclick="setEventFilter('Sports', this)">Sports</button>
+        </div>
+
+        <h3 class="section-heading">Featured Event</h3>
+        <div class="card featured-event-card" onclick="openEventDetails('EVT-01')">
+          <span class="eyebrow-blue">25 OCTOBER 2026 · SEMINAR</span>
+          <h4>Student Tech Seminar</h4>
+          <p class="muted-sm">Main Auditorium</p>
+          <div class="card-footer-row">
+            <span class="blue-text-sm">10:00 AM</span>
+            <span class="link-btn-sm">View Event</span>
+          </div>
+        </div>
+
+        <h3 class="section-heading">Upcoming Events</h3>
+        <div id="eventsListContainer"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         11 (11 / 11a / 11b) — EVENT DETAILS SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-event-details">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goToScreen('screen-events')" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Event Details</h2>
+          <p class="header-subtitle">Campus event</p>
+        </div>
+      </div>
+
+      <div class="screen-body" id="eventDetailsContainer"></div>
+    </section>
+
+    <!-- =========================================================
+         12 — NOTIFICATIONS SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-notifications">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goBack()" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Notifications</h2>
+          <p class="header-subtitle">Your recent updates</p>
+        </div>
+      </div>
+
+      <div class="screen-body">
+        <div class="section-row-between">
+          <h3 class="section-heading no-margin">Recent Updates</h3>
+          <button type="button" class="link-btn-sm" id="markAllReadBtn" onclick="markAllNotificationsRead()">Mark All as Read</button>
+        </div>
+
+        <div id="notificationsListContainer"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         13 — FEEDBACK & RATINGS SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-feedback">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goToScreen('screen-profile')" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Feedback &amp; Ratings</h2>
+          <p class="header-subtitle">Help us improve campus services</p>
+        </div>
+      </div>
+
+      <div class="screen-body">
+        <h3 class="section-heading">Share your experience</h3>
+        <p class="muted-sm mb-12">Your feedback helps make campus better for everyone.</p>
+
+        <form id="feedbackForm" onsubmit="handleFeedbackSubmit(event)" novalidate>
+          <div class="form-group">
+            <label for="fbService">Service Selection</label>
+            <select id="fbService" class="input-field">
+              <option value="Campus Events" selected>Campus Events</option>
+              <option value="Facilities Request">Facilities Request</option>
+              <option value="Lost & Found">Lost &amp; Found</option>
+              <option value="Campus Services">Campus Services</option>
+              <option value="Application Experience">Application Experience</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>How would you rate your experience?</label>
+            <div class="rating-row" id="ratingScale">
+              <button type="button" class="rate-btn" onclick="setRating(1)">1</button>
+              <button type="button" class="rate-btn" onclick="setRating(2)">2</button>
+              <button type="button" class="rate-btn" onclick="setRating(3)">3</button>
+              <button type="button" class="rate-btn active" onclick="setRating(4)">4</button>
+              <button type="button" class="rate-btn" onclick="setRating(5)">5</button>
+            </div>
+            <div class="rating-labels">
+              <span>Poor</span>
+              <span>Excellent</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fbCategory">Feedback Category</label>
+            <select id="fbCategory" class="input-field">
+              <option value="Service Quality" selected>Service Quality</option>
+              <option value="Response Time">Response Time</option>
+              <option value="Staff Support">Staff Support</option>
+              <option value="Application Experience">Application Experience</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fbComments">Comments</label>
+            <textarea id="fbComments" class="input-field textarea-field" rows="3" placeholder="Share your experience...">The seminar was well organized and helpful.</textarea>
+            <span class="field-error" id="fbCommentsError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="fbSuggestions">Suggestions for Improvement</label>
+            <textarea id="fbSuggestions" class="input-field textarea-field" rows="2" placeholder="Optional suggestions...">More hands-on activities would be great.</textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         14 — HELP & SUPPORT SCREEN
+    ========================================================== -->
+    <section class="screen has-nav" id="screen-help">
+      <div class="top-header">
+        <button type="button" class="icon-back" onclick="goBack()" aria-label="Back">&#8592;</button>
+        <div>
+          <h2 class="header-title">Help &amp; Support</h2>
+          <p class="header-subtitle">We're here to help</p>
+        </div>
+      </div>
+
+      <div class="screen-body">
+        <h3 class="section-heading">Frequently Asked Questions</h3>
+
+        <div class="faq-card open" onclick="toggleFaq(this)">
+          <div class="faq-q">
+            <strong>How do I track a request?</strong>
+            <span>&#9662;</span>
+          </div>
+          <p class="faq-a">Open Requests and select a request to see its status and timeline.</p>
+        </div>
+
+        <div class="faq-card" onclick="toggleFaq(this)">
+          <div class="faq-q">
+            <strong>Where can I report a lost item?</strong>
+            <span>&#9662;</span>
+          </div>
+          <p class="faq-a">Open Lost &amp; Found from Home or Services and tap Report Lost or Found Item.</p>
+        </div>
+
+        <h3 class="section-heading mt-16">Contact Campus Support</h3>
+        <form id="supportForm" onsubmit="handleSupportSubmit(event)" novalidate>
+          <div class="form-group">
+            <label for="supName">Name</label>
+            <input type="text" id="supName" class="input-field" value="Ayesha Malik" placeholder="Your full name">
+            <span class="field-error" id="supNameError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="supEmail">Email Address</label>
+            <input type="email" id="supEmail" class="input-field" value="student@campus.edu" placeholder="student@campus.edu">
+            <span class="field-error" id="supEmailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="supCategory">Category</label>
+            <select id="supCategory" class="input-field">
+              <option value="">Choose a category</option>
+              <option value="Technical Issue">Technical Issue</option>
+              <option value="Campus Service">Campus Service</option>
+              <option value="Account Problem">Account Problem</option>
+              <option value="Request Tracking">Request Tracking</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="field-error" id="supCategoryError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="supQuestion">Question</label>
+            <textarea id="supQuestion" class="input-field textarea-field" rows="3" placeholder="How can we help?"></textarea>
+            <span class="field-error" id="supQuestionError"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit Support Request</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PERSISTENT BOTTOM NAVIGATION BAR
+    ========================================================== -->
+    <nav class="bottom-nav hidden" id="bottomNav">
+      <button type="button" class="nav-tab active" data-target="screen-home" onclick="goToScreen('screen-home')">
+        <span class="nav-icon">&#8962;</span>
+        <span>Home</span>
+      </button>
+      <button type="button" class="nav-tab" data-target="screen-services" onclick="goToScreen('screen-services')">
+        <span class="nav-icon">&#9638;</span>
+        <span>Services</span>
+      </button>
+      <button type="button" class="nav-tab" data-target="screen-requests" onclick="goToScreen('screen-requests')">
+        <span class="nav-icon">&#128203;</span>
+        <span>Requests</span>
+      </button>
+      <button type="button" class="nav-tab" data-target="screen-profile" onclick="goToScreen('screen-profile')">
+        <span class="nav-icon">&#128100;</span>
+        <span>Profile</span>
+      </button>
+    </nav>
+
+    <!-- =========================================================
+         MODAL OVERLAY SYSTEM
+    ========================================================== -->
+    <div class="modal-backdrop hidden" id="modalBackdrop">
+      <div class="modal-card" id="modalCard"></div>
+    </div>
+
+  </div>
+
+  <!-- Firebase ES Module Script -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
