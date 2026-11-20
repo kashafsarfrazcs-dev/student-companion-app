@@ -76,7 +76,7 @@ Open http://127.0.0.1:5500/index.html in your browser.(Note: Serving over HTTP/H
 Sign in and test:
 
 Click Get Started → Sign In using the pre-filled demo account (student@campus.edu / campus1234).
----
+
 
 ### Team Contributions
 
@@ -87,4 +87,4 @@ Kashaf	Project lead; user research & personas; Figma design system & core screen
 Mubashra	Information architecture & user flows; Figma screens (05, 06, 08–11b); HTML5/CSS3 responsive layout implementation; Lost & Found and Campus Events modules.
 
 Aimen	Form validation rules & state matrix; modal overlays (12–14 & confirmation dialogs); usability evaluation; Figma-to-app comparison & final report compilation.
----
+
