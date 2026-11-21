@@ -8,7 +8,7 @@ A mobile-first web application (`390 × 844 px` viewport) developed for the **Hu
 ## Live Links & Demo
 
 - **GitHub Repository:** https://github.com/kashafsarfrazcs-dev/student-companion-app
-- **Live Hosted Application:** https://student-companion-app-4izx.netlify.app](https://student-companion-app-4izx.netlify.app
+- **Live Hosted Application:** https://student-companion-app-4izx.netlify.app/?_nf_embed=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaXRlX2lkIjoiNTkxOTA2Y2YtZDRkZC00YmE3LTg5ZDgtNDVjYmU2MzQyODE5IiwicHVycG9zZSI6ImVtYmVkIiwicGFyZW50IjoiaHR0cHM6Ly9hcHAubmV0bGlmeS5jb20iLCJpYXQiOjE3OTUyMzQ5NjYsImV4cCI6MTc5NTIzNTI2Nn0.XK6XFxvACuLDTxVEtci-5CREsygAgBDKhO0RMj4mtPQ
 - **3–5 Minute Demo Video:** https://drive.google.com/file/d/1TdwiVBQeAaZuGDc5QoTxTkt-5wQd__FG/view?usp=sharing
 - **Demo Student Credentials (Pre-filled on Login):**
   - **Email:** `student@campus.edu`
